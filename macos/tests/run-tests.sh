@@ -51,9 +51,11 @@ BACKUP="$TMP/theme-backup.json"
   'keepMe = true' > "$CONFIG"
 /bin/cp "$CONFIG" "$TMP/original.toml"
 "$NODE" "$ROOT/scripts/theme-config.mjs" install "$CONFIG" "$BACKUP" >/dev/null
-/usr/bin/grep -q 'appearanceTheme = "dark"' "$CONFIG"
+/usr/bin/cmp -s "$CONFIG" "$TMP/original.toml"
+/usr/bin/grep -qF 'appearanceTheme = \"system\"' "$BACKUP"
 "$NODE" "$ROOT/scripts/theme-config.mjs" restore "$CONFIG" "$BACKUP" >/dev/null
 /usr/bin/cmp -s "$CONFIG" "$TMP/original.toml"
+[ ! -e "$BACKUP" ]
 
 /usr/bin/env -u HOME /bin/bash -c '. "$1/scripts/common-macos.sh"; [ -n "$HOME" ] && [ "$SKIN_VERSION" = "1.1.1" ]' _ "$ROOT"
 "$ROOT/scripts/doctor-macos.sh" >/dev/null
